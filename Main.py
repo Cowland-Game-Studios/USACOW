@@ -5,16 +5,17 @@ import os
 
 window = tk.Tk()
 window.geometry("200x300")
+window.resizable(False, False)
 window.title("USACODE V1")
 
 options = [
-    "C++",
+    "Cpp",
     "Java",
-    "Python",
+    "Py",
 ]
 
 selLangVal = tk.StringVar()
-selLangVal.set("C++")
+selLangVal.set("Cpp")
 
 projectNameVal = tk.StringVar()
 projectNameVal.set("Project_Name")
@@ -54,13 +55,15 @@ def create_project():
         return
     
     os.mkdir(path)
-    if (selLangVal.get() == "C++"):
-        with open(path + "/" + projectNameVal.get() + ".cpp", "w+") as f:
-            f.write("aaaa")
-        with open(path + "/" + projectNameVal.get() + ".in", "w+") as f:
-            pass
-        with open(path + "/" + projectNameVal.get() + ".out", "w+") as f:
-            pass
+
+    with open(path + "/" + projectNameVal.get() + "." + selLangVal.get(), "w+") as f:
+        with open("/".join(os.path.dirname(os.path.realpath(__file__)).replace("\\", "/").split("/")) + "/Templates/" + selLangVal.get() + "." + selLangVal.get(), "r") as template:
+            f.writelines([x.replace("Project_Name", projectNameVal.get()) for x in template.readlines()])
+
+    with open(path + "/" + projectNameVal.get() + ".in", "w+") as f:
+        pass
+    with open(path + "/" + projectNameVal.get() + ".out", "w+") as f:
+        pass
 
     messagebox.showinfo(title="Project Created!", message=f"Created \"{projectNameVal.get()}\" project \nLanguage: {selLangVal.get()}\nAt: {selPathVal}")
 
