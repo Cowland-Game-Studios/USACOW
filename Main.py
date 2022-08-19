@@ -54,7 +54,7 @@ selPathButton.pack(pady=5)
 pathSel.pack(fill="x")
 
 def create_project():
-    path = selPathVal + "/" + projectNameVal.get()
+    path = selPathVal + "/" + projectNameVal.get().capitalize()
     if os.path.isdir(path):
         messagebox.showinfo(title="Project Directory Exists!", message=f"Failed to create project: directory already in use. \nDirectory: {path}")
         return
@@ -70,7 +70,7 @@ def create_project():
     with open(path + "/" + projectNameVal.get() + ".out", "w+") as f:
         pass
 
-    messagebox.showinfo(title="Project Created!", message=f"Created \"{projectNameVal.get()}\" project \nLanguage: {selLangVal.get()}\nAt: {selPathVal}")
+    messagebox.showinfo(title="Project Created!", message=f"Created \"{projectNameVal.get()}\" project \nLanguage: {selLangVal.get()}\nAt: {path}")
 
 createButton = tk.Button(text="Create USACO Project", command=create_project, bg="#91FFE0", bd=0, highlightthickness=0)
 createButton.place(rely=1, anchor="sw", height=40, width=200)
