@@ -2,12 +2,21 @@ import tkinter as tk
 from tkinter import filedialog
 from tkinter import messagebox
 import os
+from PIL import ImageTk, Image  
+
+CurrentPath = "/".join(os.path.dirname(os.path.realpath(__file__)).replace("\\", "/").split("/"))
 
 window = tk.Tk()
-window.geometry("200x300")
-window.configure(background="black")
+window.geometry("400x300")
+window.configure(background="#262626")
 window.resizable(False, False)
-window.title("USACODE V1")
+window.title("USACODE Project Creator")
+window.tk.call('wm', 'iconphoto', window._w, tk.PhotoImage(file=CurrentPath + "/Images/TopIcon.png"))
+
+#images
+print(CurrentPath)
+LogoImage = ImageTk.PhotoImage(image=Image.open(CurrentPath + "/Images/Logo.png").resize((125, 125)))
+GenerateButtonImage = ImageTk.PhotoImage(image=Image.open(CurrentPath + "/Images/Buttons/Gen.png").resize((260, 50)))
 
 options = [
     "Cpp",
@@ -21,20 +30,31 @@ selLangVal.set("Cpp")
 projectNameVal = tk.StringVar()
 projectNameVal.set("Project_Name")
 
-selPathVal = "/".join(os.path.dirname(os.path.realpath(__file__)).replace("\\", "/").split("/"))
+selPathVal = CurrentPath #set default dir
 
-a = tk.Label(text="Project Generator", bg="black", fg="white", font=("Helvetica", 16))
+leftPanel = tk.Frame(window, bg="#262626")
+
+tk.Label(leftPanel, image=LogoImage).place(x=0, y=150, anchor="nw", width=125, height=125)
+
+rightPanel = tk.Frame(window, bg="#262626")
+
+a = tk.Label(rightPanel, text="USACO Generator", bg="#262626", fg="white", font=("Helvetica", 12))
 a.pack()
 
-langSel = tk.OptionMenu(window, selLangVal, *options)
+langSel = tk.OptionMenu(rightPanel, selLangVal, *options)
+langSel.config(bg="#A9D6FF", bd=0, highlightthickness=0)
 langSel.pack()
 
+#if download sample data use url
+#http://www.usaco.org/index.php?page=viewproblem2&cpid=
+#cpid
+
 # pack last
-pathSel = tk.Text(background="black", fg="white")
+pathSel = tk.Text(rightPanel, background="#2d2d2d", fg="white", borderwidth=0, font=("Helvetica", 10))
 pathSel.insert('1.0', selPathVal)
 pathSel.configure(state='disabled')
 
-nameSel = tk.Entry(textvariable=projectNameVal, background="black", fg="white")
+nameSel = tk.Entry(rightPanel, textvariable=projectNameVal, background="#2d2d2d", borderwidth=0, fg="white", font=("Helvetica", 10))
 nameSel.pack(fill="x", pady=(5, 0))
 
 def open_file_explorer():
@@ -49,7 +69,7 @@ def open_file_explorer():
     pathSel.configure(state='disabled')
     selPathVal = newPath
 
-selPathButton = tk.Button(text="Browse Folder", command=open_file_explorer, bg="#262626", fg="white")
+selPathButton = tk.Button(rightPanel, text="Browse Folder", command=open_file_explorer, bg="#A9D6FF", font=("Helvetica", 10), bd=0, highlightthickness=0)
 selPathButton.pack(pady=5)
 pathSel.pack(fill="x")
 
@@ -72,7 +92,10 @@ def create_project():
 
     messagebox.showinfo(title="Project Created!", message=f"Created \"{projectNameVal.get()}\" project \nLanguage: {selLangVal.get()}\nAt: {path}")
 
-createButton = tk.Button(text="Create USACO Project", command=create_project, bg="#91FFE0", bd=0, highlightthickness=0)
-createButton.place(rely=1, anchor="sw", height=40, width=200)
+createButton = tk.Button(rightPanel, text="Create USACO Project", command=create_project, bg="#A9D6FF", bd=0, highlightthickness=0)
+createButton.place(relx=1, rely=1, anchor="se", width=250, height=50)
+
+leftPanel.place(x=0, y=0, width=125, height=300, anchor="w")
+rightPanel.place(x=140, rely=0.5, anchor="w", height=280, width=240)
 
 window.mainloop()
